@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+
+<BaseLayout title="眠れないぼくらは夜を泳ぐ — Makuma">
+  <main class="release-page">
+
+    <a class="back-link" href="/Music">← Back to Music</a>
+
+    <div class="release-hero">
+
+      <img
+        class="release-cover"
+        src="/covers/nemurenai.png"
+        alt="眠れないぼくらは夜を泳ぐ cover"
+      />
+
+      <div class="release-meta">
+        <p class="eyebrow">EP · 2026</p>
+
+        <h1>眠れないぼくらは夜を泳ぐ</h1>
+
+        <p class="release-artist">マクマ</p>
+
+        <div class="release-links">
+          <a
+            class="release-link"
+            href="https://open.spotify.com/album/XXXXXXXX"
+            target="_blank"
+          >
+            Spotify
+          </a>
+
+          <a
+            class="release-link"
+            href="https://music.apple.com/album/XXXXXXXX"
+            target="_blank"
+          >
+            Apple Music
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <section class="tracklist">
+      <h2>Tracklist</h2>
+
+      <ol>
+        <li>
+          <a href="/lyrics/nvm">nvm</a>
+        </li>
+        <li>
+         <a href="/lyrics/マリー">マリー</a>
+         </li>
+        <li>
+         <a href="/lyrics/Darks">Darks</a>
+        </li>
+        <li>
+         <a href="/lyrics/NightDive">NightDive</a>
+        </li>
+        <li>
+         <a href="/lyrics/シーク">シーク</a>
+        </li>
+      </ol>
+    </section>
+
+    <section class="release-player">
+      <iframe
+        style="border-radius:16px"
+        src="https://open.spotify.com/embed/album/6WVvYQyNNdgUrh0r3e0vua?"
+        width="100%"
+        height="480"
+        frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      ></iframe>
+    </section>
+
+  </main>
+</BaseLayout>

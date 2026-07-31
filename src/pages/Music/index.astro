@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Music — Makuma">
+  <main class="music-page">
+
+    <div class="music-header">
+      <h1>Music</h1>
+      <p>Discography</p>
+    </div>
+
+    <div class="music-grid">
+
+      <a class="music-card" href="/Music/nemurenai">
+        <img src="/covers/nemurenai.png" alt="nemurenai cover" />
+
+        <div class="music-card-body">
+          <h2>眠れないぼくらは夜を泳ぐ</h2>
+          <p>EP · 2026</p>
+        </div>
+      </a>
+
+      <a class="music-card coming-soon" href="#">
+        <div class="empty-cover">
+          <span>COMING SOON</span>
+        </div>
+
+        <div class="music-card-body">
+          <h2>Weatherland</h2>
+          <p>Upcoming</p>
+        </div>
+      </a>
+
+      <a class="music-card coming-soon" href="#">
+        <div class="empty-cover">
+          <span>COMING SOON</span>
+        </div>
+
+        <div class="music-card-body">
+          <h2>TokyoOneRoom</h2>
+          <p>Upcoming</p>
+        </div>
+      </a>
+
+    </div>
+
+  </main>
+</BaseLayout>

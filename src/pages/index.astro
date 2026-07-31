@@ -1,17 +1,59 @@
 ---
-
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Makuma">
+  <div class="container">
+
+    <header class="top-nav">
+ <nav>
+   <a href="/Music">Music</a>
+  <a href="/lyrics">Lyrics</a>
+  <a href="/songnotes">Song Notes</a>
+  <a href="/SNS">SNS</a>
+  <a href="/Contact">Contact</a>
+</nav>
+</header>
+
+    <main class="hero">
+
+      <section class="hero-copy">
+       
+
+        <p>Music for sleepless nights.</p>
+      </section>
+
+     <section class="hero-art">
+
+  <a class="hero-cover-link" href="/Music/nemurenai">
+    <img
+      class="cover-image"
+      src="/covers/nemurenai.png"
+      alt="眠れないぼくらは夜を泳ぐ cover"
+    />
+  </a>
+
+  <div class="meta">
+          <span>NEW EP</span>
+          <h2>眠れないぼくらは夜を泳ぐ</h2>
+          <a href="/Music/nemurenai">View →</a>
+        </div>
+
+      </section>
+
+    </main>
+
+    <section class="listen">
+      <div class="listen-grid">
+        <a href="https://open.spotify.com/intl-ja/artist/1NvDvypuP7KgrQJU69W56F?si=Aj9ba0jhTqOcCpNvxDcIyg" target="_blank">Spotify</a>
+        <a href="https://music.apple.com/jp/artist/%E3%83%9E%E3%82%AF%E3%83%9E/1463361339" target="_blank">Apple Music</a>
+        <a href="https://www.youtube.com/@makuma" target="_blank">YouTube</a>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 Makuma
+    </footer>
+
+  </div>
+</BaseLayout>
