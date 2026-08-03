@@ -969,3 +969,26 @@ footer{
     font-size:.92rem;
   }
 }
+/* Song Notes article */
+
+.note-article{
+  width:min(760px, 100%);
+}
+
+.note-date{
+  color:var(--muted);
+  margin:-8px 0 36px;
+  font-size:.92rem;
+}
+
+.note-body{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  line-height:2.05;
+  font-size:1.05rem;
+}
+
+.note-body p{
+  margin:0;
+}
