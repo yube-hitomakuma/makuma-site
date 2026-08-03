@@ -973,6 +973,7 @@ footer{
 
 .note-article{
   width:min(760px, 100%);
+  margin:0 auto;
 }
 
 .note-date{
@@ -987,8 +988,15 @@ footer{
   gap:24px;
   line-height:2.05;
   font-size:1.05rem;
+  padding:0 8px;
 }
 
 .note-body p{
   margin:0;
+}
+
+@media(min-width: 900px){
+  .note-body{
+    padding:0 24px;
+  }
 }
