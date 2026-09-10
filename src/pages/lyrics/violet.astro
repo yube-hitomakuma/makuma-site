@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="ヴァイオレット — Makuma">
+  <main class="lyrics-page">
+    <a class="back-link" href="/lyrics">← Back to Lyrics</a>
+
+    <h1>ヴァイオレット</h1>
+    <p class="lyrics-subtitle">Weather Land · 2025</p>
+
+    <div class="lyrics-links">
+      <a class="lyrics-link" href="https://open.spotify.com/track/2jknrs8H8dszJLmYxa3Zxs" target="_blank" rel="noopener noreferrer">Spotify</a>
+      <a class="lyrics-link" href="https://music.apple.com/jp/album/%E3%83%B4%E3%82%A1%E3%82%A4%E3%82%AA%E3%83%AC%E3%83%83%E3%83%88/1856903098?i=1856904475" target="_blank" rel="noopener noreferrer">Apple Music</a>
+    </div>
+
+    <article class="lyrics-body">
+      <p>きみが眠れぬ夜にいるなら<br />歌わずにはいられない だって<br />その気持ち、ちゃんと知ってるよ</p>
+
+      <p>カーテンの向こうにある<br />世界の終わりに少し期待して<br />ただ、眺めてる</p>
+
+      <p>例えば今日が最後の日<br />話をしようよ<br />なにもないと言ったきみの日々は<br />ちゃんとここに在って、それでいいから</p>
+
+      <p>きみが暗闇に飲まれそうでも<br />きみが世界に絶望しても<br />きみがきみを見失っても<br />世界がきみを忘れても</p>
+
+      <p>心臓の鼓動ぜんぶ分かるくらい<br />ぜんぶで抱きしめるよ<br />そのためにぼくは<br />この部屋から音楽を作ったんだ</p>
+    </article>
+
+    <nav class="lyrics-nav" aria-label="歌詞ページのナビゲーション">
+      <a href="/Music/weatherland">← Weather Land</a>
+      <a href="/lyrics">Lyrics →</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .lyrics-nav {
+    display: flex;
+  }
+
+  .lyrics-body p {
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+</style>

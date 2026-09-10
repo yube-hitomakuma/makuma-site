@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import weatherLandCover from "../../assets/weather-land.png";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
@@ -21,14 +23,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         </div>
       </a>
 
-      <a class="music-card coming-soon" href="#">
-        <div class="empty-cover">
-          <span>COMING SOON</span>
-        </div>
+      <a class="music-card" href="/Music/weatherland">
+        <Image src={weatherLandCover} alt="Weather Land cover" width={640} format="webp" style="height:auto" />
 
         <div class="music-card-body">
-          <h2>Weatherland</h2>
-          <p>Upcoming</p>
+          <h2>Weather Land</h2>
+          <p>Album · 2025</p>
         </div>
       </a>
 

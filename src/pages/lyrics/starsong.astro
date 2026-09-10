@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Starsong — Makuma">
+  <main class="lyrics-page">
+    <a class="back-link" href="/lyrics">← Back to Lyrics</a>
+
+    <h1>Starsong</h1>
+    <p class="lyrics-subtitle">Weather Land · 2025</p>
+
+    <div class="lyrics-links">
+      <a class="lyrics-link" href="https://open.spotify.com/track/17pOawEV0dJ7oQMHpneL1a" target="_blank" rel="noopener noreferrer">Spotify</a>
+      <a class="lyrics-link" href="https://music.apple.com/jp/album/starsong/1856903098?i=1856903101" target="_blank" rel="noopener noreferrer">Apple Music</a>
+    </div>
+
+    <article class="lyrics-body">
+      <p>またね、の来ないまたね、に嫌気がさしそうで<br />最近さ、どうしてる？ そればっかり聞くよ</p>
+
+      <p>声ひとつ聞こえないぼくらだけの夜に<br />ぼくらだけの星を数える</p>
+
+      <p>いまひとつ星が降ったら<br />きみの願い叶える邪魔は誰にもさせないよ<br />ぼくはなにも知らないフリをして<br />答えちゃくれない星を夢みてる</p>
+
+      <p>reel the light あかりを一つ<br />きみがとなりにいる いまぼくのとなりに<br />それがなんていうかさ、嬉しいんだ<br />reel the light あかりを一つ<br />きみはぼくを忘れるよ<br />それでもずっと暗闇じゃ生きていけやしないから<br />reel the light あかりを釣ってきみにあげるんだ</p>
+
+      <p>いまひとつ星が降ったら<br />きみの願い叶える邪魔は誰にもさせないよ<br />ぼくはなにも知らないフリをして<br />答えちゃくれないきみを夢にみる</p>
+    </article>
+
+    <nav class="lyrics-nav" aria-label="歌詞ページのナビゲーション">
+      <a href="/Music/weatherland">← Weather Land</a>
+      <a href="/lyrics">Lyrics →</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .lyrics-nav {
+    display: flex;
+  }
+
+  .lyrics-body p {
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+</style>

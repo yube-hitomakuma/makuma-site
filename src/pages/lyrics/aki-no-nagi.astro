@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="秋の凪 — Makuma">
+  <main class="lyrics-page">
+    <a class="back-link" href="/lyrics">← Back to Lyrics</a>
+
+    <h1>秋の凪</h1>
+    <p class="lyrics-subtitle">Weather Land · 2025</p>
+
+    <div class="lyrics-links">
+      <a class="lyrics-link" href="https://open.spotify.com/track/6JlZsdu3MIsSn2R3pKmSAL" target="_blank" rel="noopener noreferrer">Spotify</a>
+      <a class="lyrics-link" href="https://music.apple.com/jp/album/%E7%A7%8B%E3%81%AE%E5%87%AA/1856903098?i=1856904053" target="_blank" rel="noopener noreferrer">Apple Music</a>
+    </div>
+
+    <article class="lyrics-body">
+      <p>きみの声がまだ聞こえるよう<br />消えそうな夜に凪を待ってるよ<br />ねえ</p>
+
+      <p>もういいかい？もういいよ、終わるまでの間に<br />解けることないようかけてくれた呪文<br />揺らぐ季節を無くさないよう<br />変わらずあるよ</p>
+
+      <p>いまだけでもいいから<br />ねえ姿をあらわしてよ</p>
+
+      <p>魔法のようで 過ぎ去ってしまう<br />魔法のようで 夢になってしまう<br />魔法のようで 置いてかれてしまう<br />魔法のようで きみのようで まるで居ないような、いま</p>
+
+      <p>きみの声がまだ聞こえるよ<br />消えそうな夜に凪を待ってるよ<br />ねえ</p>
+
+      <p>もういいかい？もういいよ、終わるまでの間に<br />解けることないようかけてくれた呪文<br />揺らぐ季節を無くさないよう<br />変わらずあるよ</p>
+
+      <p>いまだけでもいいから<br />ねえ姿をあらわしてよ</p>
+
+      <p>いまだけでもいいから<br />ねえ姿をあらわしてよ</p>
+
+      <p>魔法のようで 過ぎ去ってしまう<br />魔法のようで 夢になってしまう<br />魔法のようで 置いてかれてしまう<br />魔法のようで <br />魔法のようで <br />魔法のようで <br />魔法のようで </p>
+    </article>
+
+    <nav class="lyrics-nav" aria-label="歌詞ページのナビゲーション">
+      <a href="/Music/weatherland">← Weather Land</a>
+      <a href="/lyrics">Lyrics →</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .lyrics-nav {
+    display: flex;
+  }
+
+  .lyrics-body p {
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+</style>

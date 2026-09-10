@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Braintrip — Makuma">
+  <main class="lyrics-page">
+    <a class="back-link" href="/lyrics">← Back to Lyrics</a>
+
+    <h1>Braintrip</h1>
+    <p class="lyrics-subtitle">Weather Land · 2025</p>
+
+    <div class="lyrics-links">
+      <a class="lyrics-link" href="https://open.spotify.com/track/2iniUsm3JvR4moGXfwSinr" target="_blank" rel="noopener noreferrer">Spotify</a>
+      <a class="lyrics-link" href="https://music.apple.com/jp/album/braintrip/1856903098?i=1856904044" target="_blank" rel="noopener noreferrer">Apple Music</a>
+    </div>
+
+    <article class="lyrics-body">
+      <p>ベッドルームに浮かぶ光の粒に乗って行こうよ<br />深く呼吸を飲んで この時代に自由であるということを</p>
+
+      <p>思い　生まれていく<br />とめどなく流れる</p>
+
+      <p>I feel you in my brain<br />Ifeel you in my skin<br />そこに楽園がなくても<br />I feel you in my brain<br />I feel you in my dream<br />世界に見捨てられたとしても</p>
+
+      <p>ベッドルームに浮かぶ光の粒に乗って行こうよ<br />深く呼吸を飲んで 加速する時代に変わらないものを</p>
+
+      <p>思い　生まれていく<br />とめどなく流れる<br />きみが望むのならどこへでも</p>
+
+      <p>I feel you in my brain<br />Ifeel you in my skin<br />そこに楽園がなくても</p>
+
+      <p>I feel you in my brain<br />I feel you in my dream<br />世界に見捨てられたとしても</p>
+
+      <p>ベッドルームの想像はぼくらのものだ</p>
+    </article>
+
+    <nav class="lyrics-nav" aria-label="歌詞ページのナビゲーション">
+      <a href="/Music/weatherland">← Weather Land</a>
+      <a href="/lyrics">Lyrics →</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .lyrics-nav {
+    display: flex;
+  }
+
+  .lyrics-body p {
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+</style>
