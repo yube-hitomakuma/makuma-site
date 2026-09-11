@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "update:once": "node scripts/process-update-materials.mjs",
-    "update:watch": "node scripts/process-update-materials.mjs --watch"
+    "update:watch": "node scripts/process-update-materials.mjs --watch",
+    "update:desktop": "node scripts/desktop-update.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
