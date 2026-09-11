@@ -5,17 +5,35 @@
  * This script is launched by the Desktop .command file.
  */
 import { execFile } from "node:child_process";
+import { appendFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const repoRoot = process.cwd();
+const logPath = join(repoRoot, ".cache", "desktop-update.log");
+
+async function log(message) {
+  await mkdir(join(repoRoot, ".cache"), { recursive: true });
+  await appendFile(logPath, `[${new Date().toLocaleString("ja-JP")}] ${message}\n`);
+}
 
 async function run(command, args, options = {}) {
-  const { stdout, stderr } = await execFileAsync(command, args, {
-    cwd: repoRoot,
-    maxBuffer: 10 * 1024 * 1024,
-    ...options,
-  });
+  let result;
+  try {
+    result = await execFileAsync(command, args, {
+      cwd: repoRoot,
+      maxBuffer: 10 * 1024 * 1024,
+      ...options,
+    });
+  } catch (error) {
+    const detail = [error.message, error.stdout, error.stderr].filter(Boolean).join("\n");
+    if (detail) process.stderr.write(`${detail}\n`);
+    await log(`失敗: ${command} ${args.join(" ")}\n${detail}`);
+    throw error;
+  }
+
+  const { stdout, stderr } = result;
 
   if (stdout) process.stdout.write(stdout);
   if (stderr) process.stderr.write(stderr);
@@ -37,6 +55,7 @@ async function dialog(message, buttons, defaultButton) {
 }
 
 async function main() {
+  await log("サイト更新を開始しました。");
   if (await status()) {
     await dialog(
       "未確認のサイト変更があります。混在を避けるため、今回の自動更新は開始しません。差分を確認してからもう一度実行してください。",
@@ -50,9 +69,10 @@ async function main() {
   try {
     await run("npm", ["run", "update:once"]);
     await run("npm", ["run", "build"]);
-  } catch {
+  } catch (error) {
+    console.error(error.message);
     await dialog(
-      "更新準備またはビルドで問題が見つかりました。公開は行いません。ターミナルの表示を確認してください。",
+      "更新を完了できませんでした。公開は行いません。ターミナルの表示、または「.cache/desktop-update.log」を確認してください。",
       ["閉じる"],
       "閉じる",
     );
@@ -90,7 +110,8 @@ async function main() {
       ["閉じる"],
       "閉じる",
     );
-  } catch {
+  } catch (error) {
+    console.error(error.message);
     await dialog(
       "公開処理で問題が見つかりました。ターミナルの表示を確認してください。",
       ["閉じる"],

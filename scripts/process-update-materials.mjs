@@ -21,6 +21,7 @@ const statePath = join(repoRoot, ".cache", "makuma-update-monitor.json");
 const watch = process.argv.includes("--watch");
 const pollIntervalMs = 15_000;
 const stableForMs = 30_000;
+const bundledCodexCli = "/Applications/ChatGPT.app/Contents/Resources/codex";
 
 function fail(message) {
   console.error(`更新素材を処理できません: ${message}`);
@@ -109,7 +110,12 @@ or change remote services. Finish by reporting the local diff and preview URL.`;
 }
 
 async function runCodex() {
-  const command = process.env.CODEX_CLI_PATH ?? "codex";
+  // Finder-launched Terminal sessions do not always inherit the normal shell
+  // PATH. Prefer the Codex executable bundled with the ChatGPT app, while
+  // still allowing an explicit override for future installations.
+  const command = process.env.CODEX_CLI_PATH ?? (
+    existsSync(bundledCodexCli) ? bundledCodexCli : "codex"
+  );
   const args = [
     "exec",
     "--cd",
@@ -144,6 +150,17 @@ async function inspect() {
   const files = await inventory(inbox);
   if (files.length === 0) {
     console.log("素材フォルダは空です。処理は行いません。");
+    return;
+  }
+
+  const unexpectedRootFiles = files.filter((file) => {
+    const name = file.split(":")[0];
+    return !name.includes("/") && name !== "更新内容.txt";
+  });
+  if (unexpectedRootFiles.length > 0) {
+    fail(
+      `素材の置き場所を確認してください: ${unexpectedRootFiles.join(", ")}。ジャケットは「ジャケット」、歌詞は「歌詞」、Song Notesは「Song Notes」に入れてください`,
+    );
     return;
   }
 
