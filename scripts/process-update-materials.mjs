@@ -117,6 +117,8 @@ async function runCodex() {
     existsSync(bundledCodexCli) ? bundledCodexCli : "codex"
   );
   const args = [
+    "--ask-for-approval",
+    "never",
     "exec",
     "--cd",
     repoRoot,
@@ -124,8 +126,6 @@ async function runCodex() {
     inbox,
     "--sandbox",
     "workspace-write",
-    "--ask-for-approval",
-    "never",
     buildPrompt(),
   ];
 
