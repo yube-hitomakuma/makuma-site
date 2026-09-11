@@ -22,6 +22,11 @@ const watch = process.argv.includes("--watch");
 const pollIntervalMs = 15_000;
 const stableForMs = 30_000;
 const bundledCodexCli = "/Applications/ChatGPT.app/Contents/Resources/codex";
+const materialFolders = ["ジャケット", "歌詞", "Song Notes"];
+
+async function ensureMaterialFolders() {
+  await Promise.all(materialFolders.map(folder => mkdir(join(inbox, folder), { recursive: true })));
+}
 
 function fail(message) {
   console.error(`更新素材を処理できません: ${message}`);
@@ -34,7 +39,7 @@ async function inventory(directory, depth = 0) {
 
   for (const entry of entries) {
     if (entry.name.startsWith(".") || entry.name === "処理済み") continue;
-    if (depth === 0 && entry.isDirectory() && !["ジャケット", "歌詞", "Song Notes"].includes(entry.name)) continue;
+    if (depth === 0 && entry.isDirectory() && !materialFolders.includes(entry.name)) continue;
     const fullPath = join(directory, entry.name);
     if (entry.isDirectory()) {
       const nested = await inventory(fullPath, depth + 1);
@@ -86,6 +91,7 @@ async function archiveMaterials(files) {
   }
 
   console.log(`処理した素材を保管しました: ${archive}`);
+  await ensureMaterialFolders();
 }
 
 function buildPrompt(files) {
@@ -174,6 +180,8 @@ async function inspect() {
     fail(`素材フォルダがありません: ${inbox}`);
     return;
   }
+
+  await ensureMaterialFolders();
 
   const files = await inventory(inbox);
   if (files.length === 0) {
