@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Tokyo One Room — Makuma">
+  <main class="lyrics-page">
+    <a class="back-link" href="/lyrics">← Back to Lyrics</a>
+
+    <h1>Tokyo One Room</h1>
+    <p class="lyrics-subtitle">Tokyo one room · 2020</p>
+
+    <div class="lyrics-links">
+      <a class="lyrics-link" href="https://open.spotify.com/album/52JvC9GU3gccZDG2lcw2VN" target="_blank" rel="noopener noreferrer">Spotify</a>
+      <a class="lyrics-link" href="https://music.apple.com/jp/song/1533084952" target="_blank" rel="noopener noreferrer">Apple Music</a>
+    </div>
+
+    <article class="lyrics-body">
+      <p>{`am2:00まで話し込んでも
+永遠尽きないぼくらのいつも
+真面目な話そこそこで終え
+すぐそこ来る近未来の話
+2LDKがいいねって笑って
+どんないいねよりそれが嬉しいね
+おやすみは寝落ちでいつも言えず とも
+Bad tripしないよう癒す`}</p>
+
+      <p>{`いいとこ悪いとこいくらでも言える
+けど 悪いとこなんて全然ない
+むしろいつもポジティブでいたいありたいって
+キャパすら考えずほらまた無理して
+目一杯 溢れてしまう Weakend
+しんどい気持ち 投げつけていいよ
+まるごと全部 ぎゅってしてあげる`}</p>
+
+      <p>{`トーキョーロンリー ルーム
+大丈夫、心配なんてなにもいらない
+おかえり、今日も好きだよ`}</p>
+
+      <p>{`いつもどこも行けなくてごめん
+来週末はきみの好きな場所へ
+お洒落するぞって楽しそう たまには 
+駅前  はやめ集合 
+悩みも不安も ため息も デートにはいらない`}</p>
+
+      <p>{`でも夢見心地だけじゃいられない
+現実問題うまくいかない
+どうしようもない って
+ひとりになるとたまらなくなる夜も
+大丈夫どこへもいかない となりは変わらない
+他でもない誰でもないぼくがいるよ`}</p>
+
+      <p>{`凍えそうな丘公園 世界でただひとり
+かけがえのないきみを見つけた時から`}</p>
+
+      <p>{`トーキョーロンリー ルーム
+大丈夫、心配なんてなにもいらない
+おかえり、今日も好きだよ`}</p>
+    </article>
+
+    <nav class="lyrics-nav" aria-label="歌詞ページのナビゲーション">
+      <a href="/Music/tokyo-one-room">← Tokyo one room</a>
+      <a href="/lyrics">Lyrics →</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .lyrics-nav {
+    display: flex;
+  }
+
+  .lyrics-body p {
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+</style>

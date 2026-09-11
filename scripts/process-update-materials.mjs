@@ -108,6 +108,9 @@ Read the matching page and its category index. For a new release use only
 src/pages/Music/weatherland.astro as the style example. Inspect shared code
 only when the requested change requires it. Do not touch unrelated pages.
 For cover-only updates do not inspect lyrics or Song Notes.
+For lyric additions also read the matching Music release page and link its
+matching tracklist entry to the new lyric page. This is a related page, not a
+reason to scan other releases. Keep tracks without lyrics unlinked.
 Determine what the materials are intended to update. When distribution URLs or
 tracklists are needed, research them from authoritative artist, distributor,
 Spotify, or Apple Music pages and cross-check the result.
