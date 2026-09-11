@@ -93,6 +93,12 @@ Determine what the materials are intended to update. When distribution URLs or
 tracklists are needed, research them from authoritative artist, distributor,
 Spotify, or Apple Music pages and cross-check the result.
 
+The inbox uses these folders: ジャケット for cover images, 歌詞 for lyric
+documents, and Song Notes for Song Notes documents. A cover image is named
+作品名（曲名）.jpg or .png; lyric and Song Notes documents are each named
+曲名.docx. Treat the folder as the source type when the same song appears in
+both a lyric and Song Notes document.
+
 Make all necessary local changes: place images in the right project location,
 create or update Astro pages, links, lyrics, Music and Lyrics indexes, and
 Song Notes when source material calls for it. Preserve supplied text and stanza
