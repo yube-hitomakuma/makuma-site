@@ -4,7 +4,7 @@
  * Runs a material update, then presents the final publishing choice in macOS.
  * This script is launched by the Desktop .command file.
  */
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
@@ -19,24 +19,24 @@ async function log(message) {
 }
 
 async function run(command, args, options = {}) {
-  let result;
-  try {
-    result = await execFileAsync(command, args, {
-      cwd: repoRoot,
-      maxBuffer: 10 * 1024 * 1024,
-      ...options,
+  await new Promise((resolveRun, rejectRun) => {
+    const child = spawn(command, args, {
+      cwd: repoRoot, ...options, stdio: ["ignore", "pipe", "pipe"],
     });
-  } catch (error) {
-    const detail = [error.message, error.stdout, error.stderr].filter(Boolean).join("\n");
-    if (detail) process.stderr.write(`${detail}\n`);
-    await log(`失敗: ${command} ${args.join(" ")}\n${detail}`);
-    throw error;
-  }
-
-  const { stdout, stderr } = result;
-
-  if (stdout) process.stdout.write(stdout);
-  if (stderr) process.stderr.write(stderr);
+    let pendingLog = Promise.resolve();
+    for (const [source, destination] of [[child.stdout, process.stdout], [child.stderr, process.stderr]]) {
+      source.on("data", (chunk) => {
+        destination.write(chunk);
+        pendingLog = pendingLog.then(() => appendFile(logPath, chunk)).catch(() => {});
+      });
+    }
+    child.once("error", rejectRun);
+    child.once("close", async (code, signal) => {
+      await pendingLog;
+      if (code === 0) resolveRun();
+      else rejectRun(new Error(`${command}: 終了状態 ${code ?? signal}`));
+    });
+  });
 }
 
 async function status() {
@@ -55,6 +55,7 @@ async function dialog(message, buttons, defaultButton) {
 }
 
 async function main() {
+  console.log("サイト更新を開始します。処理の進行状況をここに表示します。");
   await log("サイト更新を開始しました。");
   if (await status()) {
     await dialog(
@@ -67,7 +68,9 @@ async function main() {
   }
 
   try {
+    console.log("素材を確認し、更新内容を準備しています。数分かかる場合があります。");
     await run("npm", ["run", "update:once"]);
+    console.log("サイトのビルドを確認しています。");
     await run("npm", ["run", "build"]);
   } catch (error) {
     console.error(error.message);
