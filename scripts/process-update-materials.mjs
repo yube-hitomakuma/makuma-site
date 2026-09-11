@@ -22,7 +22,7 @@ const watch = process.argv.includes("--watch");
 const pollIntervalMs = 15_000;
 const stableForMs = 30_000;
 const bundledCodexCli = "/Applications/ChatGPT.app/Contents/Resources/codex";
-const materialFolders = ["ジャケット", "歌詞", "Song Notes"];
+const materialFolders = ["ジャケット", "リリック", "ノーツ"];
 
 async function ensureMaterialFolders() {
   await Promise.all(materialFolders.map(folder => mkdir(join(inbox, folder), { recursive: true })));
@@ -126,8 +126,8 @@ Streaming / Download button to the website.
 If the URL cannot be verified, explicitly report the missing Spotify link and
 player as incomplete work rather than claiming the update is complete.
 
-The inbox uses these folders: ジャケット for cover images, 歌詞 for lyric
-documents, and Song Notes for Song Notes documents. A cover image is named
+The inbox uses these folders: ジャケット for cover images, リリック for lyric
+documents, and ノーツ for Song Notes documents. A cover image is named
 作品名（曲名）.jpg or .png; lyric and Song Notes documents are each named
 曲名.docx. Treat the folder as the source type when the same song appears in
 both a lyric and Song Notes document.
@@ -195,7 +195,7 @@ async function inspect() {
   });
   if (unexpectedRootFiles.length > 0) {
     fail(
-      `素材の置き場所を確認してください: ${unexpectedRootFiles.join(", ")}。ジャケットは「ジャケット」、歌詞は「歌詞」、Song Notesは「Song Notes」に入れてください`,
+      `素材の置き場所を確認してください: ${unexpectedRootFiles.join(", ")}。ジャケットは「ジャケット」、歌詞は「リリック」、Song Notesは「ノーツ」に入れてください`,
     );
     return;
   }

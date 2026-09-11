@@ -56,6 +56,8 @@ async function dialog(message, buttons, defaultButton) {
 }
 
 async function openPreview() {
+  // Refresh Astro's route table after files have been added by the updater.
+  await run("npm", ["run", "astro", "--", "dev", "stop"]);
   await run("npm", ["run", "dev", "--", "--background"]);
   const state = JSON.parse(await readFile(join(repoRoot, ".astro", "dev.json"), "utf8"));
   const base = new URL(state.url);
