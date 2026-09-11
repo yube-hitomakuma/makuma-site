@@ -28,15 +28,16 @@ function fail(message) {
   process.exitCode = 1;
 }
 
-async function inventory(directory) {
+async function inventory(directory, depth = 0) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
 
   for (const entry of entries) {
     if (entry.name.startsWith(".") || entry.name === "処理済み") continue;
+    if (depth === 0 && entry.isDirectory() && !["ジャケット", "歌詞", "Song Notes"].includes(entry.name)) continue;
     const fullPath = join(directory, entry.name);
     if (entry.isDirectory()) {
-      const nested = await inventory(fullPath);
+      const nested = await inventory(fullPath, depth + 1);
       files.push(...nested.map((file) => `${entry.name}/${file}`));
       continue;
     }
@@ -69,30 +70,55 @@ function archiveName() {
   return new Date().toISOString().replaceAll(":", "-").replace(".", "-");
 }
 
-async function archiveMaterials() {
+async function archiveMaterials(files) {
   const archive = join(inbox, "処理済み", archiveName());
-  const entries = await readdir(inbox, { withFileTypes: true });
-  const materials = entries.filter(
-    (entry) => !entry.name.startsWith(".") && entry.name !== "処理済み",
-  );
+  const materials = files.map(file => file.replace(/:\d+:\d+$/, ""));
 
   if (materials.length === 0) return;
   await mkdir(archive, { recursive: true });
 
   for (const material of materials) {
-    await rename(join(inbox, material.name), join(archive, material.name));
+    const original = files.find(file => file.startsWith(`${material}:`));
+    const current = await stat(join(inbox, material));
+    if (original !== `${material}:${current.size}:${Math.floor(current.mtimeMs)}`) continue;
+    await mkdir(dirname(join(archive, material)), { recursive: true });
+    await rename(join(inbox, material), join(archive, material));
   }
 
   console.log(`処理した素材を保管しました: ${archive}`);
 }
 
-function buildPrompt() {
+function buildPrompt(files) {
   return `You maintain the Makuma official website in ${repoRoot}.
 
-New materials are in ${inbox}. Inspect every supplied file and the existing site.
+Only process this exact list of new materials:
+${files.map(file => join(inbox, file.replace(/:\d+:\d+$/, ""))).join("\n")}
+
+Read only those material files. Never list, scan, or read 処理済み or other
+inbox folders, previous batches, caches, logs, node_modules, or dist.
+Do not recursively scan the repository or read every page. Read AGENTS.md,
+then search filenames/titles only within the relevant src/pages category.
+Read the matching page and its category index. For a new release use only
+src/pages/Music/weatherland.astro as the style example. Inspect shared code
+only when the requested change requires it. Do not touch unrelated pages.
+For cover-only updates do not inspect lyrics or Song Notes.
 Determine what the materials are intended to update. When distribution URLs or
 tracklists are needed, research them from authoritative artist, distributor,
 Spotify, or Apple Music pages and cross-check the result.
+Follow distributor smart-link redirects to obtain the actual Spotify release
+URL. Verify its artist and title, then add both a Spotify link and a Spotify
+embed player matching the existing release pages. Never invent a Spotify ID.
+Reuse verified links already on the matching page first. If missing, find the
+official distributor link for this title and artist, then run:
+node scripts/resolve-spotify.mjs '<distributor URL>' '<exact release title>'
+The helper follows the distributor's Spotify redirect and returns the verified
+URL and embed URL. Verify the artist from the distributor page too. Do not
+repeat broad searches after this succeeds. Use the returned URLs on the page.
+Keep release buttons labeled Spotify and Apple Music as on existing pages.
+Use distributor smart links only for research; do not add LinkCore or a
+Streaming / Download button to the website.
+If the URL cannot be verified, explicitly report the missing Spotify link and
+player as incomplete work rather than claiming the update is complete.
 
 The inbox uses these folders: ジャケット for cover images, 歌詞 for lyric
 documents, and Song Notes for Song Notes documents. A cover image is named
@@ -103,13 +129,15 @@ both a lyric and Song Notes document.
 Make all necessary local changes: place images in the right project location,
 create or update Astro pages, links, lyrics, Music and Lyrics indexes, and
 Song Notes when source material calls for it. Preserve supplied text and stanza
-breaks exactly. Run npm run build and check generated internal links.
+breaks exactly. Do not run the build or start a preview: the desktop launcher
+runs the build and release-link checks once after your edits. Check only links
+you changed, not every page. Finish with a concise list of changed files.
 
 Do not delete or rename source material. Do not commit, push, deploy, publish,
 or change remote services. Finish by reporting the local diff and preview URL.`;
 }
 
-async function runCodex() {
+async function runCodex(files) {
   // Finder-launched Terminal sessions do not always inherit the normal shell
   // PATH. Prefer the Codex executable bundled with the ChatGPT app, while
   // still allowing an explicit override for future installations.
@@ -126,7 +154,7 @@ async function runCodex() {
     inbox,
     "--sandbox",
     "workspace-write",
-    buildPrompt(),
+    buildPrompt(files),
   ];
 
   console.log("新しい素材を検知しました。更新準備を開始します。");
@@ -184,8 +212,8 @@ async function inspect() {
     return;
   }
 
-  await runCodex();
-  await archiveMaterials();
+  await runCodex(files);
+  await archiveMaterials(files);
   await saveState({ processed: current, observed: current, observedAt: now });
 }
 

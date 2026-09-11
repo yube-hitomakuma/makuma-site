@@ -5,9 +5,10 @@
  * This script is launched by the Desktop .command file.
  */
 import { execFile, spawn } from "node:child_process";
-import { appendFile, mkdir } from "node:fs/promises";
+import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
+import { pathToFileURL } from "node:url";
 
 const execFileAsync = promisify(execFile);
 const repoRoot = process.cwd();
@@ -54,24 +55,43 @@ async function dialog(message, buttons, defaultButton) {
   return stdout.match(/button returned:([^,]+)/)?.[1];
 }
 
+async function openPreview() {
+  await run("npm", ["run", "dev", "--", "--background"]);
+  const state = JSON.parse(await readFile(join(repoRoot, ".astro", "dev.json"), "utf8"));
+  const base = new URL(state.url);
+  if (!["localhost", "127.0.0.1"].includes(base.hostname)) throw new Error("プレビューの接続先を確認できませんでした。");
+  const { stdout } = await execFileAsync("git", ["ls-files", "--others", "--exclude-standard", "src/pages"], { cwd: repoRoot });
+  const { stdout: modified } = await execFileAsync("git", ["diff", "HEAD", "--name-only", "--", "src/pages"], { cwd: repoRoot });
+  const pages = [...stdout.split("\n"), ...modified.split("\n")].filter(p => p.endsWith(".astro") && !p.includes("[") && !p.endsWith("index.astro"));
+  const route = pages.length === 1 ? "/" + pages[0].replace(/^src\/pages\//, "").replace(/\.astro$/, "") : "/Music";
+  const url = new URL(route, base).href;
+  const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+  if (!response.ok) throw new Error("プレビューを読み込めませんでした。");
+  await run("open", [url]);
+  return url;
+}
+
+export async function reviewAndPublish(actions) {
+  await actions.preview();
+  const choice = await actions.choose();
+  if (choice === "公開する") await actions.publish();
+  else if (choice === "修正する") await actions.revise();
+}
+
 async function main() {
   console.log("サイト更新を開始します。処理の進行状況をここに表示します。");
   await log("サイト更新を開始しました。");
   if (await status()) {
-    await dialog(
-      "未確認のサイト変更があります。混在を避けるため、今回の自動更新は開始しません。差分を確認してからもう一度実行してください。",
-      ["閉じる"],
-      "閉じる",
-    );
-    process.exitCode = 1;
-    return;
+    console.log("保留中の変更を再確認します。新しい素材の取り込みは次回に行います。");
+  } else {
+    console.log("素材を確認し、更新内容を準備しています。数分かかる場合があります。");
+    await run("npm", ["run", "update:once"]);
   }
 
   try {
-    console.log("素材を確認し、更新内容を準備しています。数分かかる場合があります。");
-    await run("npm", ["run", "update:once"]);
     console.log("サイトのビルドを確認しています。");
     await run("npm", ["run", "build"]);
+    await run(process.execPath, ["scripts/check-release-links.mjs"]);
   } catch (error) {
     console.error(error.message);
     await dialog(
@@ -92,18 +112,17 @@ async function main() {
     return;
   }
 
-  const publishChoice = await dialog(
-    "更新の準備とビルドが完了しました。公開しますか？\n\n「公開する」を選ぶと、変更をcommitしてGitHubへpushします。Cloudflare Pagesが本番サイトを更新します。",
-    ["あとで確認", "公開する"],
-    "あとで確認",
-  );
-
-  if (publishChoice !== "公開する") {
-    console.log("公開は保留しました。変更はローカルに残っています。");
-    return;
-  }
-
-  try {
+  await reviewAndPublish({
+    preview: openPreview,
+    choose: () => dialog(
+      "プレビューを開きました。内容を確認してから選んでください。\n\n公開しますか？\n「修正する」は変更を保存したままChatGPTを開きます。",
+      ["修正する", "公開する"], "修正する",
+    ),
+    revise: async () => {
+      console.log("変更を保存しました。ChatGPTで修正内容を伝えてください。");
+      await run("open", ["-a", "ChatGPT"]);
+    },
+    publish: async () => {
     await run("git", ["diff", "--check"]);
     await run("git", ["add", "--all"]);
     await run("git", ["commit", "-m", "Update Makuma website content"]);
@@ -113,15 +132,15 @@ async function main() {
       ["閉じる"],
       "閉じる",
     );
-  } catch (error) {
-    console.error(error.message);
-    await dialog(
-      "公開処理で問題が見つかりました。ターミナルの表示を確認してください。",
-      ["閉じる"],
-      "閉じる",
-    );
-    process.exitCode = 1;
-  }
+    },
+  });
 }
 
-main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(async error => {
+    console.error(error.message);
+    await log(error.stack ?? error.message);
+    await dialog("処理を完了できませんでした。ターミナルに原因を表示しました。", ["閉じる"], "閉じる").catch(() => {});
+    process.exitCode = 1;
+  });
+}
