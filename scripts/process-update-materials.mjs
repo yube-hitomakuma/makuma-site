@@ -8,7 +8,7 @@
  */
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 
@@ -32,7 +32,7 @@ async function inventory(directory) {
   const files = [];
 
   for (const entry of entries) {
-    if (entry.name.startsWith(".")) continue;
+    if (entry.name.startsWith(".") || entry.name === "処理済み") continue;
     const fullPath = join(directory, entry.name);
     if (entry.isDirectory()) {
       const nested = await inventory(fullPath);
@@ -62,6 +62,27 @@ async function readState() {
 async function saveState(state) {
   await mkdir(dirname(statePath), { recursive: true });
   await writeFile(statePath, `${JSON.stringify(state, null, 2)}\n`);
+}
+
+function archiveName() {
+  return new Date().toISOString().replaceAll(":", "-").replace(".", "-");
+}
+
+async function archiveMaterials() {
+  const archive = join(inbox, "処理済み", archiveName());
+  const entries = await readdir(inbox, { withFileTypes: true });
+  const materials = entries.filter(
+    (entry) => !entry.name.startsWith(".") && entry.name !== "処理済み",
+  );
+
+  if (materials.length === 0) return;
+  await mkdir(archive, { recursive: true });
+
+  for (const material of materials) {
+    await rename(join(inbox, material.name), join(archive, material.name));
+  }
+
+  console.log(`処理した素材を保管しました: ${archive}`);
 }
 
 function buildPrompt() {
@@ -141,6 +162,7 @@ async function inspect() {
   }
 
   await runCodex();
+  await archiveMaterials();
   await saveState({ processed: current, observed: current, observedAt: now });
 }
 
