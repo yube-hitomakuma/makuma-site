@@ -51,9 +51,12 @@ async function status() {
 async function dialog(message, buttons, defaultButton) {
   const escaped = message.replaceAll('"', '\\"');
   const labels = buttons.map((button) => `"${button}"`).join(", ");
-  const script = `display dialog "${escaped}" buttons {${labels}} default button "${defaultButton}" with title "Makumaサイト更新"`;
+  const script = `return button returned of (display dialog "${escaped}" buttons {${labels}} default button "${defaultButton}" with title "Makumaサイト更新")`;
   const { stdout } = await execFileAsync("osascript", ["-e", script]);
-  return stdout.match(/button returned:([^,]+)/)?.[1];
+  const choice = stdout.trim();
+  if (!buttons.includes(choice)) throw new Error("選択したボタンを読み取れませんでした。");
+  await log(`選択: ${choice}`);
+  return choice;
 }
 
 async function openPreview() {
@@ -76,9 +79,10 @@ async function openPreview() {
 
 export async function reviewAndPublish(actions) {
   await actions.preview();
-  const choice = await actions.choose();
+  const choice = (await actions.choose())?.trim();
   if (choice === "公開") await actions.publish();
   else if (choice === "修正") await actions.revise();
+  else throw new Error("公開・修正の選択結果を確認できないため、処理を停止しました。");
 }
 
 async function main() {
