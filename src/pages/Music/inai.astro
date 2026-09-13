@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="いない — Makuma">
+  <main class="release-page">
+    <a class="back-link" href="/Music">← Back to Music</a>
+
+    <div class="release-hero">
+      <img class="release-cover" src="/covers/inai.png" alt="いない cover" />
+
+      <div class="release-meta">
+        <p class="eyebrow">SINGLE · 2020</p>
+        <h1>いない</h1>
+        <p class="release-artist">マクマ · 2020.11.28 · 1 track</p>
+
+        <div class="release-links">
+          <a class="release-link" href="https://open.spotify.com/album/3sMDd9eQPwZdIOJmeOso74" target="_blank" rel="noopener noreferrer">Spotify</a>
+          <a class="release-link" href="https://music.apple.com/jp/album/%E3%81%84%E3%81%AA%E3%81%84-single/1539396652" target="_blank" rel="noopener noreferrer">Apple Music</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="tracklist">
+      <h2>Tracklist</h2>
+      <ol>
+        <li><a href="/lyrics/inai">いない</a></li>
+      </ol>
+    </section>
+    <section class="release-player">
+      <iframe title="いない — Spotify player" style="border-radius:16px; border:0"
+        src="https://open.spotify.com/embed/album/3sMDd9eQPwZdIOJmeOso74"
+        width="100%" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </section>
+  </main>
+</BaseLayout>
