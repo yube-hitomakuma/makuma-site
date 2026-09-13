@@ -9,6 +9,7 @@ import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
+import { startProgress, waitForDeployment, deploymentFiles } from "./publish-progress.mjs";
 
 const execFileAsync = promisify(execFile);
 const repoRoot = process.cwd();
@@ -125,15 +126,31 @@ async function main() {
       await run("open", ["-a", "ChatGPT"]);
     },
     publish: async () => {
+    const progress = await startProgress();
+    try {
+    await run("open", [progress.url]);
+    const changed = await execFileAsync("git", ["diff", "HEAD", "--name-only"], {cwd:repoRoot});
+    const added = await execFileAsync("git", ["ls-files", "--others", "--exclude-standard"], {cwd:repoRoot});
+    const expected = await deploymentFiles(repoRoot, (changed.stdout+'\n'+added.stdout).trim().split('\n'));
     await run("git", ["diff", "--check"]);
+    progress.set(20, "変更を保存しています");
     await run("git", ["add", "--all"]);
     await run("git", ["commit", "-m", "Update Makuma website content"]);
+    progress.set(40, "公開先へ送信しています");
     await run("git", ["push", "origin", "main"]);
+    progress.set(70, "本番サイトへの反映を待っています");
+    await waitForDeployment(expected);
+    progress.set(100, "公開しました");
     await dialog(
-      "GitHubへpushしました。Cloudflare Pagesによる本番反映を開始しています。",
-      ["閉じる"],
-      "閉じる",
+      "公開しました。本番サイトへの反映を確認しました。",
+      ["完了"],
+      "完了",
     );
+    } catch(error) {
+      progress.set(70, error.message, true);
+      await dialog(error.message, ["閉じる"], "閉じる");
+      throw error;
+    } finally { progress.close(); }
     },
   });
 }

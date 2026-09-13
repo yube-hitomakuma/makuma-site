@@ -119,6 +119,9 @@ URL. Verify its artist and title, then add both a Spotify link and a Spotify
 embed player matching the existing release pages. Never invent a Spotify ID.
 Reuse verified links already on the matching page first. If missing, find the
 official distributor link for this title and artist, then run:
+For Makuma, start with https://www.tunecore.co.jp/artists/makuma?lang=ja
+and inspect only the matching release link (Japanese and English titles may
+differ). Follow that LinkCore URL rather than relying on search engine results.
 node scripts/resolve-spotify.mjs '<distributor URL>' '<exact release title>'
 The helper follows the distributor's Spotify redirect and returns the verified
 URL and embed URL. Verify the artist from the distributor page too. Do not
