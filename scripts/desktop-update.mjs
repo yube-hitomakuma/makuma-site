@@ -76,8 +76,8 @@ async function openPreview() {
 export async function reviewAndPublish(actions) {
   await actions.preview();
   const choice = await actions.choose();
-  if (choice === "公開する") await actions.publish();
-  else if (choice === "修正する") await actions.revise();
+  if (choice === "公開") await actions.publish();
+  else if (choice === "修正") await actions.revise();
 }
 
 async function main() {
@@ -117,8 +117,8 @@ async function main() {
   await reviewAndPublish({
     preview: openPreview,
     choose: () => dialog(
-      "プレビューを開きました。内容を確認してから選んでください。\n\n公開しますか？\n「修正する」は変更を保存したままChatGPTを開きます。",
-      ["修正する", "公開する"], "修正する",
+      "既定ブラウザでプレビューを開きました。画面を確認してから選んでください。\n\n「公開」：この内容を本番サイトに公開します。\n「修正」：変更を残してChatGPTを開きます。",
+      ["修正", "公開"], "修正",
     ),
     revise: async () => {
       console.log("変更を保存しました。ChatGPTで修正内容を伝えてください。");

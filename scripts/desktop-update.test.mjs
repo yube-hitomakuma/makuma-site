@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { reviewAndPublish } from "./desktop-update.mjs";
 
-for (const choice of ["公開する", "修正する", undefined]) {
+for (const choice of ["公開", "修正", undefined]) {
   test(`preview precedes choice: ${choice}`, async () => {
     const events = [];
     await reviewAndPublish({
@@ -11,7 +11,7 @@ for (const choice of ["公開する", "修正する", undefined]) {
       publish: async () => events.push("publish"),
       revise: async () => events.push("revise"),
     });
-    assert.deepEqual(events, ["preview", "choose", ...(choice === "公開する" ? ["publish"] : choice === "修正する" ? ["revise"] : [])]);
+    assert.deepEqual(events, ["preview", "choose", ...(choice === "公開" ? ["publish"] : choice === "修正" ? ["revise"] : [])]);
   });
 }
 test("failed preview never requests or performs publication", async () => {
